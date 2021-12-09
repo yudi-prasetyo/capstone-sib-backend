@@ -1,5 +1,8 @@
 const Hapi = require('@hapi/hapi');
+// const mongodb = require('hapi-mongodb');
+const mongoose = require('mongoose');
 const routes = require('./routes');
+const { dbUrl } = require('./config');
 
 const init = async () => {
   const server = Hapi.server({
@@ -12,9 +15,18 @@ const init = async () => {
     },
   });
 
+  // await server.register();
+
   server.route(routes);
 
-  await server.start();
+  await server.start((err) => {
+    if (err) {
+      throw err;
+    }
+  });
+
+  mongoose.connect(dbUrl);
+
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
 
