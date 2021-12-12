@@ -1,9 +1,8 @@
-const Psychologist = require('../model/PsychologistModel');
+const Psychologist = require('../models/PsychologistModel');
 
 const getAllPsychologists = async () => {
   const psychologists = await Psychologist.find({});
 
-  console.log(psychologists);
   return psychologists;
 };
 

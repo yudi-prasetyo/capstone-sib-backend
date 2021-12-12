@@ -1,4 +1,5 @@
-const User = require('../model/UserModel');
+const User = require('../models/UserModel');
+const Appointment = require('../models/AppointmentModel');
 
 const registerUser = async (req, h) => {
   const {
@@ -31,13 +32,6 @@ const registerUser = async (req, h) => {
 
     return response;
   }
-};
-
-const getAllUsers = async () => {
-  const users = await User.find({});
-
-  console.log(users);
-  return users;
 };
 
 const getUserById = async (req, h) => {
@@ -73,4 +67,37 @@ const getUserById = async (req, h) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, registerUser };
+const getUserAppointments = async (req, h) => {
+  const { userId } = req.params;
+
+  try {
+    const appointments = await Appointment.find({ userId }).exec();
+
+    if (appointments) {
+      return {
+        status: 'success',
+        data: {
+          appointments,
+        },
+      };
+    }
+
+    const response = h.response({
+      status: 'fail',
+      message: 'user tidak ditemukan',
+    });
+    response.code(404);
+
+    return response;
+  } catch (err) {
+    const response = h.response({
+      status: 'fail',
+      message: err.message,
+    });
+    response.code(404);
+
+    return response;
+  }
+};
+
+module.exports = { getUserById, registerUser, getUserAppointments };

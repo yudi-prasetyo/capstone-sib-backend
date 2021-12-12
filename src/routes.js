@@ -1,22 +1,20 @@
-const { registerUser, getAllUsers, getUserById } = require('./handler/userHandler');
-const { getAllPsychologists, getPsychologistById } = require('./handler/psychologistHandler');
-const { createAppointment } = require('./handler/appointmentHandler');
+const { registerUser, getUserById, getUserAppointments } = require('./handlers/userHandler');
+const { getAllPsychologists, getPsychologistById } = require('./handlers/psychologistHandler');
+const { createAppointment } = require('./handlers/appointmentHandler');
+const { userValidator, appointmentValidator } = require('./services/validator');
 
 const routes = [
   {
     method: 'POST',
     path: '/users',
-    handler: async () => {
-      const res = await registerUser();
+    handler: async (req, h) => {
+      const res = await registerUser(req, h);
       return res;
     },
-  },
-  {
-    method: 'GET',
-    path: '/users',
-    handler: async () => {
-      const res = await getAllUsers();
-      return res;
+    options: {
+      validate: {
+        payload: userValidator,
+      },
     },
   },
   {
@@ -24,6 +22,14 @@ const routes = [
     path: '/users/{userId}',
     handler: async (req, h) => {
       const res = await getUserById(req, h);
+      return res;
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/{userId}/appointments',
+    handler: async (req, h) => {
+      const res = await getUserAppointments(req, h);
       return res;
     },
   },
@@ -49,6 +55,11 @@ const routes = [
     handler: async (req, h) => {
       const res = await createAppointment(req, h);
       return res;
+    },
+    options: {
+      validate: {
+        payload: appointmentValidator,
+      },
     },
   },
 ];
