@@ -1,7 +1,9 @@
 const { registerUser, getUserById, getUserAppointments } = require('./handlers/userHandler');
-const { getAllPsychologists, getPsychologistById } = require('./handlers/psychologistHandler');
+const {
+  registerPsychologist, getAllPsychologists, getPsychologistById, getPsychologistAppointments,
+} = require('./handlers/psychologistHandler');
 const { createAppointment } = require('./handlers/appointmentHandler');
-const { userValidator, appointmentValidator } = require('./services/validator');
+const { userValidator, psychologistValidator, appointmentValidator } = require('./services/validator');
 
 const routes = [
   {
@@ -24,6 +26,9 @@ const routes = [
       const res = await getUserById(req, h);
       return res;
     },
+    options: {
+      auth: 'jwt-userId',
+    },
   },
   {
     method: 'GET',
@@ -34,11 +39,28 @@ const routes = [
     },
   },
   {
+    method: 'POST',
+    path: '/psychologists',
+    handler: async (req, h) => {
+      const res = await registerPsychologist(req, h);
+      return res;
+    },
+    options: {
+      validate: {
+        payload: psychologistValidator,
+      },
+    },
+  },
+  {
     method: 'GET',
     path: '/psychologists',
-    handler: async () => {
+    handler: async (req) => {
+      console.log(req.auth.credentials);
       const res = await getAllPsychologists();
       return res;
+    },
+    options: {
+      auth: 'jwt-user',
     },
   },
   {
@@ -46,6 +68,14 @@ const routes = [
     path: '/psychologists/{psychologistId}',
     handler: async (req, h) => {
       const res = await getPsychologistById(req, h);
+      return res;
+    },
+  },
+  {
+    method: 'GET',
+    path: '/psychologists/{psychologistId}/appointments',
+    handler: async (req, h) => {
+      const res = await getPsychologistAppointments(req, h);
       return res;
     },
   },

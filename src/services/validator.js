@@ -14,7 +14,7 @@ const psychologistValidator = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   dateOfBirth: Joi.date().required(),
-  specialization: Joi.array().items(Joi.string()).required(),
+  specialities: Joi.array().items(Joi.string()).required(),
 });
 
 const appointmentValidator = Joi.object({

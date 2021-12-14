@@ -8,7 +8,7 @@ const psychologistModel = new Schema({
   email: { type: String, required: true, index: { unique: true } },
   password: { type: String, required: true },
   dateOfBirth: { type: Date, required: true },
-  specialization: { type: [String], required: true },
+  specialities: { type: [String], required: true },
   createDate: { type: Date, default: Date.now },
 });
 
