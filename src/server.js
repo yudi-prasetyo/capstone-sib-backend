@@ -1,8 +1,11 @@
 const Hapi = require('@hapi/hapi');
-// const mongodb = require('hapi-mongodb');
 const mongoose = require('mongoose');
+const Jwt = require('@hapi/jwt');
 const routes = require('./routes');
-const { dbUrl } = require('./config');
+const { DB_URL } = require('./config');
+const {
+  validateUser, validateByUserId, validatePsychologist, validateByPsychologistId,
+} = require('./services/authServices');
 
 const init = async () => {
   const server = Hapi.server({
@@ -15,7 +18,12 @@ const init = async () => {
     },
   });
 
-  // await server.register();
+  await server.register(Jwt);
+
+  server.auth.strategy('jwt-user', 'jwt', validateUser);
+  server.auth.strategy('jwt-userId', 'jwt', validateByUserId);
+  server.auth.strategy('jwt-psychologist', 'jwt', validatePsychologist);
+  server.auth.strategy('jwt-psyhologistId', 'jwt', validateByPsychologistId);
 
   server.route(routes);
 
@@ -25,7 +33,7 @@ const init = async () => {
     }
   });
 
-  mongoose.connect(dbUrl);
+  mongoose.connect(DB_URL);
 
   console.log(`Server berjalan pada ${server.info.uri}`);
 };
