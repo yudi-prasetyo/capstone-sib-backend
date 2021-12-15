@@ -2,10 +2,18 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { SECRET_KEY, ROLES } = require('../config');
 
-const hashPassword = (password) => bcrypt.genSalt(
-  10,
-  (err, salt) => bcrypt.hash(password, salt, (error, hash) => hash),
-);
+const hashPassword = async function hashPassword(password) {
+  const saltRounds = 10;
+
+  const hashedPassword = await new Promise((resolve, reject) => {
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+      if (err) reject(err);
+      resolve(hash);
+    });
+  });
+
+  return hashedPassword;
+};
 
 const createToken = (payload) => jwt.sign({
   aud: 'urn:audience:test',

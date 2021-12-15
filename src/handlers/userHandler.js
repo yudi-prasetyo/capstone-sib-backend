@@ -1,20 +1,17 @@
 const { ROLES } = require('../config');
-const { createToken } = require('../services/authServices');
+const { hashPassword, createToken } = require('../services/authServices');
 const User = require('../models/UserModel');
 const Appointment = require('../models/AppointmentModel');
 
 const registerUser = async (req, h) => {
-  console.log(req.payload);
-
   const {
     firstName,
     lastName,
     email,
-    password,
     dateOfBirth,
   } = req.payload;
-  // const password = hashPassword(req.payload.password);
-  // console.log(password);
+
+  const password = await hashPassword(req.payload.password);
 
   try {
     const user = await new User({
@@ -47,7 +44,6 @@ const registerUser = async (req, h) => {
 
 const getUserById = async (req, h) => {
   const { userId } = req.params;
-  console.log(req.auth.credentials);
   try {
     const user = await User.findById(userId).exec();
 

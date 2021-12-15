@@ -1,3 +1,5 @@
+const { ROLES } = require('../config');
+const { hashPassword, createToken } = require('../services/authServices');
 const Psychologist = require('../models/PsychologistModel');
 const Appointment = require('../models/AppointmentModel');
 
@@ -6,24 +8,30 @@ const registerPsychologist = async (req, h) => {
     firstName,
     lastName,
     email,
-    password,
     dateOfBirth,
     specialities,
   } = req.payload;
 
+  const password = await hashPassword(req.payload.password);
+
   try {
-    const psychologist = new Psychologist({
+    const psychologist = await new Psychologist({
       firstName,
       lastName,
       email,
       password,
       dateOfBirth,
       specialities,
+    }).save();
+
+    const token = createToken({
+      psychologistId: psychologist._id,
+      role: ROLES.PSYCHOLOGIST,
     });
 
-    await psychologist.save();
     return h.response({
       message: 'Psychologist created successfully',
+      token,
     });
   } catch (err) {
     const response = h.response({

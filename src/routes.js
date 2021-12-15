@@ -3,9 +3,25 @@ const {
   registerPsychologist, getAllPsychologists, getPsychologistById, getPsychologistAppointments,
 } = require('./handlers/psychologistHandler');
 const { createAppointment } = require('./handlers/appointmentHandler');
-const { userValidator, psychologistValidator, appointmentValidator } = require('./services/validator');
+const { login } = require('./handlers/loginHandler');
+const {
+  userValidator, psychologistValidator, appointmentValidator, loginValidator,
+} = require('./services/validator');
 
 const routes = [
+  {
+    method: 'POST',
+    path: '/login',
+    handler: async (req, h) => {
+      const res = await login(req, h);
+      return res;
+    },
+    options: {
+      validate: {
+        payload: loginValidator,
+      },
+    },
+  },
   {
     method: 'POST',
     path: '/users',
@@ -27,7 +43,9 @@ const routes = [
       return res;
     },
     options: {
-      auth: 'jwt-userId',
+      auth: {
+        strategies: ['jwt-userId', 'jwt-psychologist'],
+      },
     },
   },
   {
@@ -36,6 +54,11 @@ const routes = [
     handler: async (req, h) => {
       const res = await getUserAppointments(req, h);
       return res;
+    },
+    options: {
+      auth: {
+        strategies: ['jwt-userId'],
+      },
     },
   },
   {
@@ -59,9 +82,6 @@ const routes = [
       const res = await getAllPsychologists();
       return res;
     },
-    options: {
-      auth: 'jwt-user',
-    },
   },
   {
     method: 'GET',
@@ -78,6 +98,11 @@ const routes = [
       const res = await getPsychologistAppointments(req, h);
       return res;
     },
+    options: {
+      auth: {
+        strategies: ['jwt-psychologistId'],
+      },
+    },
   },
   {
     method: 'POST',
@@ -89,6 +114,9 @@ const routes = [
     options: {
       validate: {
         payload: appointmentValidator,
+      },
+      auth: {
+        strategies: ['jwt-user'],
       },
     },
   },

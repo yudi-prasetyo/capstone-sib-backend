@@ -24,4 +24,11 @@ const appointmentValidator = Joi.object({
   appointmentType: Joi.string().required(),
 });
 
-module.exports = { userValidator, psychologistValidator, appointmentValidator };
+const loginValidator = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
+module.exports = {
+  userValidator, psychologistValidator, appointmentValidator, loginValidator,
+};

@@ -23,7 +23,7 @@ const init = async () => {
   server.auth.strategy('jwt-user', 'jwt', validateUser);
   server.auth.strategy('jwt-userId', 'jwt', validateByUserId);
   server.auth.strategy('jwt-psychologist', 'jwt', validatePsychologist);
-  server.auth.strategy('jwt-psyhologistId', 'jwt', validateByPsychologistId);
+  server.auth.strategy('jwt-psychologistId', 'jwt', validateByPsychologistId);
 
   server.route(routes);
 
