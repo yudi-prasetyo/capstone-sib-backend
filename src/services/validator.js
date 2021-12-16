@@ -29,6 +29,25 @@ const loginValidator = Joi.object({
   password: Joi.string().min(6).required(),
 });
 
+const CHAT_ROOM_TYPES = {
+  CONSUMER_TO_CONSUMER: 'consumer-to-consumer',
+  CONSUMER_TO_SUPPORT: 'consumer-to-support',
+};
+
+const chatRoomValidator = Joi.object({
+  userIds: Joi.array().items(Joi.string()).required(),
+  type: Joi.string().valid(...Object.values(CHAT_ROOM_TYPES)).required(),
+});
+
+const chatMessageValidator = Joi.object({
+  message: Joi.string().required(),
+});
+
 module.exports = {
-  userValidator, psychologistValidator, appointmentValidator, loginValidator,
+  userValidator,
+  psychologistValidator,
+  appointmentValidator,
+  loginValidator,
+  chatRoomValidator,
+  chatMessageValidator,
 };

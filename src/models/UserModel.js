@@ -11,4 +11,9 @@ const userModel = new Schema({
   createDate: { type: Date, default: Date.now },
 });
 
+userModel.statics.getUserByIds = async function (ids) {
+  const users = await this.find({ _id: { $in: ids } });
+  return users;
+};
+
 module.exports = mongoose.model('User', userModel);

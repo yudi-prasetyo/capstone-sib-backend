@@ -4,8 +4,14 @@ const {
 } = require('./handlers/psychologistHandler');
 const { createAppointment } = require('./handlers/appointmentHandler');
 const { login } = require('./handlers/loginHandler');
+const { initiateChat, postMessage, getConversationById } = require('./handlers/chatHandler');
 const {
-  userValidator, psychologistValidator, appointmentValidator, loginValidator,
+  userValidator,
+  psychologistValidator,
+  appointmentValidator,
+  loginValidator,
+  chatRoomValidator,
+  chatMessageValidator,
 } = require('./services/validator');
 
 const routes = [
@@ -118,6 +124,51 @@ const routes = [
       auth: {
         strategies: ['jwt-user'],
       },
+    },
+  },
+  {
+    method: 'POST',
+    path: '/initiate-chat',
+    handler: async (req, h) => {
+      const res = await initiateChat(req, h);
+      return res;
+    },
+    options: {
+      validate: {
+        payload: chatRoomValidator,
+      },
+      // auth: {
+      //   strategies: ['jwt-user', 'jwt-psychologist'],
+      // },
+    },
+  },
+  {
+    method: 'POST',
+    path: '/chat/{roomId}/message',
+    handler: async (req, h) => {
+      const res = await postMessage(req, h);
+      return res;
+    },
+    options: {
+      validate: {
+        payload: chatMessageValidator,
+      },
+      // auth: {
+      //   strategies: ['jwt-user', 'jwt-psychologist'],
+      // },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/chat/{roomId}',
+    handler: async (req, h) => {
+      const res = await getConversationById(req, h);
+      return res;
+    },
+    options: {
+      // auth: {
+      //   strategies: ['jwt-user', 'jwt-psychologist'],
+      // },
     },
   },
 ];

@@ -23,7 +23,7 @@ const registerUser = async (req, h) => {
     }).save();
 
     const token = createToken({
-      userId: user._id,
+      id: user._id,
       role: ROLES.USER,
     });
 

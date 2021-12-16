@@ -1,7 +1,9 @@
 const Hapi = require('@hapi/hapi');
 const mongoose = require('mongoose');
 const Jwt = require('@hapi/jwt');
+const socketio = require('socket.io');
 const routes = require('./routes');
+const { webSockets } = require('./utils/WebSockets');
 const { DB_URL } = require('./config');
 const {
   validateUser, validateByUserId, validatePsychologist, validateByPsychologistId,
@@ -34,6 +36,9 @@ const init = async () => {
   });
 
   mongoose.connect(DB_URL);
+
+  global.io = socketio(server.listener);
+  global.io.on('connection', webSockets.connection);
 
   console.log(`Server berjalan pada ${server.info.uri}`);
 };

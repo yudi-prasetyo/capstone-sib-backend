@@ -25,7 +25,7 @@ const registerPsychologist = async (req, h) => {
     }).save();
 
     const token = createToken({
-      psychologistId: psychologist._id,
+      id: psychologist._id,
       role: ROLES.PSYCHOLOGIST,
     });
 

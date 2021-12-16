@@ -17,7 +17,7 @@ const login = async (req, h) => {
 
       if (match) {
         const token = createToken({
-          userId: user._id,
+          id: user._id,
           role: ROLES.USER,
         });
 
@@ -39,7 +39,7 @@ const login = async (req, h) => {
 
       if (match) {
         const token = createToken({
-          psychologistId: psychologist._id,
+          id: psychologist._id,
           role: ROLES.PSYCHOLOGIST,
         });
 
