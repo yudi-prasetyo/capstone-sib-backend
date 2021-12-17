@@ -87,7 +87,7 @@ const getPsychologistAppointments = async (req, h) => {
   const { psychologistId } = req.params;
 
   try {
-    const appointments = await Appointment.find({ psychologistId }).exec();
+    const appointments = await Appointment.getPsychologistAppointments(psychologistId);
 
     if (appointments) {
       return {

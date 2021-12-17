@@ -78,7 +78,7 @@ const getUserAppointments = async (req, h) => {
   const { userId } = req.params;
 
   try {
-    const appointments = await Appointment.find({ userId }).exec();
+    const appointments = await Appointment.getUserAppointments(userId);
 
     if (appointments) {
       return {

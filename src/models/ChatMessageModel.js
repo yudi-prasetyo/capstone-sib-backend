@@ -6,20 +6,28 @@ const MESSAGE_TYPES = {
   TEXT: 'text',
 };
 
-const chatMessageModel = new Schema({
-  chatRoomId: { type: String, required: true },
-  message: { type: String, required: true },
-  type: { type: String, default: () => MESSAGE_TYPES.TEXT, required: true },
-  postedByUser: { type: String, required: true },
-});
+const chatMessageModel = new Schema(
+  {
+    chatRoomId: { type: String, required: true },
+    message: { type: String, required: true },
+    type: { type: String, default: () => MESSAGE_TYPES.TEXT, required: true },
+    postedByUser: { type: String, required: true },
+  },
+  {
+    timestamps: true,
+  },
+);
 
 chatMessageModel.statics
-  .createMessageInChatRoom = async function (chatRoomId, message, postedByUser) {
+  .createMessageInChatRoom = async function createMessageInChatRoom(
+    chatRoomId,
+    message,
+    postedByUser,
+  ) {
     const post = await this.create({
       chatRoomId,
       message,
       postedByUser,
-      readByRecipients: { readByUserId: postedByUser },
     });
     const aggregate = await this.aggregate([
     // get post where _id = post._id
@@ -67,36 +75,21 @@ chatMessageModel.statics
           message: { $last: '$message' },
           type: { $last: '$type' },
           postedByUser: { $last: '$postedByUser' },
-          readByRecipients: { $last: '$readByRecipients' },
           chatRoomInfo: { $addToSet: '$chatRoomInfo.userProfile' },
           createdAt: { $last: '$createdAt' },
           updatedAt: { $last: '$updatedAt' },
         },
       },
     ]);
+
     return aggregate[0];
   };
 
 chatMessageModel.statics
-  .getConversationByRoomId = async function (chatRoomId, options = {}) {
+  .getConversationByRoomId = async function getConversationByRoomId(chatRoomId) {
     return this.aggregate([
       { $match: { chatRoomId } },
       { $sort: { createdAt: -1 } },
-      // do a join on another table called users, and
-      // get me a user whose _id = postedByUser
-      {
-        $lookup: {
-          from: 'users',
-          localField: 'postedByUser',
-          foreignField: '_id',
-          as: 'postedByUser',
-        },
-      },
-      { $unwind: '$postedByUser' },
-      // apply pagination
-      { $skip: options.page * options.limit },
-      { $limit: options.limit },
-      { $sort: { createdAt: 1 } },
     ]);
   };
 

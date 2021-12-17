@@ -137,9 +137,9 @@ const routes = [
       validate: {
         payload: chatRoomValidator,
       },
-      // auth: {
-      //   strategies: ['jwt-user', 'jwt-psychologist'],
-      // },
+      auth: {
+        strategies: ['jwt-user', 'jwt-psychologist'],
+      },
     },
   },
   {
@@ -153,9 +153,9 @@ const routes = [
       validate: {
         payload: chatMessageValidator,
       },
-      // auth: {
-      //   strategies: ['jwt-user', 'jwt-psychologist'],
-      // },
+      auth: {
+        strategies: ['jwt-user', 'jwt-psychologist'],
+      },
     },
   },
   {
@@ -166,9 +166,9 @@ const routes = [
       return res;
     },
     options: {
-      // auth: {
-      //   strategies: ['jwt-user', 'jwt-psychologist'],
-      // },
+      auth: {
+        strategies: ['jwt-user', 'jwt-psychologist'],
+      },
     },
   },
 ];

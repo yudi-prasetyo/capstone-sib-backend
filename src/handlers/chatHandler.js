@@ -4,11 +4,12 @@ const User = require('../models/UserModel');
 
 const initiateChat = async (req, h) => {
   try {
-    const { userIds, type } = req.payload;
-    const { userId: chatInitiator } = req.auth.credentials;
+    const { userIds } = req.payload;
+    console.log(req.auth.credentials);
+    const { id: chatInitiator } = req.auth.credentials;
 
     const allUserIds = [...userIds, chatInitiator];
-    const chatRoom = await ChatRoom.initiateChat(allUserIds, type, chatInitiator);
+    const chatRoom = await ChatRoom.initiateChat(allUserIds, chatInitiator);
 
     return h.response({ success: true, chatRoom }).code(200);
   } catch (err) {
@@ -27,7 +28,7 @@ const postMessage = async (req, h) => {
     const { message } = req.payload;
     const { roomId } = req.params;
 
-    const currentLoggedUser = req.auth.credentials.userId;
+    const currentLoggedUser = req.auth.credentials.id;
 
     const post = await ChatMessage.createMessageInChatRoom(roomId, message, currentLoggedUser);
     global.io.sockets.in(roomId).emit('new message', { message: post });

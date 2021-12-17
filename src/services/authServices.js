@@ -36,12 +36,12 @@ const authStrategyTemplate = {
 const validateUser = {
   ...authStrategyTemplate,
   validate: (artifacts) => {
-    const { userId, role } = artifacts.decoded.payload;
+    const { id, role } = artifacts.decoded.payload;
 
     if (role === ROLES.USER) {
       return {
         isValid: true,
-        credentials: { userId, role },
+        credentials: { id, role },
       };
     }
 
@@ -56,12 +56,12 @@ const validateByUserId = {
   ...authStrategyTemplate,
   validate: (artifacts, req) => {
     const { userId: userIdParam } = req.params;
-    const { userId, role } = artifacts.decoded.payload;
+    const { id, role } = artifacts.decoded.payload;
 
-    if (userIdParam === userId) {
+    if (userIdParam === id) {
       return {
         isValid: true,
-        credentials: { userId, role },
+        credentials: { id, role },
       };
     }
 
@@ -75,12 +75,12 @@ const validateByUserId = {
 const validatePsychologist = {
   ...authStrategyTemplate,
   validate: (artifacts) => {
-    const { role, psychologistId } = artifacts.decoded.payload;
+    const { id, role } = artifacts.decoded.payload;
 
     if (role === ROLES.PSYCHOLOGIST) {
       return {
         isValid: true,
-        credentials: { role, psychologistId },
+        credentials: { id, role },
       };
     }
 
@@ -95,12 +95,12 @@ const validateByPsychologistId = {
   ...authStrategyTemplate,
   validate: (artifacts, req) => {
     const { psychologistId: psychologistIdParam } = req.params;
-    const { psychologistId, role } = artifacts.decoded.payload;
+    const { id, role } = artifacts.decoded.payload;
 
-    if (psychologistIdParam === psychologistId) {
+    if (psychologistIdParam === id) {
       return {
         isValid: true,
-        credentials: { psychologistId, role },
+        credentials: { id, role },
       };
     }
 
