@@ -30,7 +30,7 @@ const loginValidator = Joi.object({
 });
 
 const chatRoomValidator = Joi.object({
-  userIds: Joi.array().items(Joi.string()).required(),
+  psychologistId: Joi.string().required(),
 });
 
 const chatMessageValidator = Joi.object({

@@ -3,17 +3,15 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const chatRoomModel = new Schema({
-  userIds: { type: Array, required: true },
-  chatInitiator: { type: String, required: true },
+  psychologistId: { type: Schema.Types.ObjectId, ref: 'Psychologist', required: true },
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 });
 
-chatRoomModel.statics.initiateChat = async function initiateChat(userIds, chatInitiator) {
+chatRoomModel.statics.initiateChat = async function initiateChat(psychologistId, userId) {
   try {
     const availableRoom = await this.findOne({
-      userIds: {
-        $size: userIds.length,
-        $all: [...userIds],
-      },
+      psychologistId,
+      userId,
     });
     if (availableRoom) {
       return {
@@ -23,7 +21,7 @@ chatRoomModel.statics.initiateChat = async function initiateChat(userIds, chatIn
       };
     }
 
-    const newRoom = await this.create({ userIds, chatInitiator });
+    const newRoom = await this.create({ psychologistId, userId });
     return {
       isNew: true,
       message: 'creating a new chatroom',

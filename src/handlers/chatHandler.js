@@ -4,12 +4,11 @@ const User = require('../models/UserModel');
 
 const initiateChat = async (req, h) => {
   try {
-    const { userIds } = req.payload;
+    const { psychologistId } = req.payload;
     console.log(req.auth.credentials);
-    const { id: chatInitiator } = req.auth.credentials;
+    const { id: userId } = req.auth.credentials;
 
-    const allUserIds = [...userIds, chatInitiator];
-    const chatRoom = await ChatRoom.initiateChat(allUserIds, chatInitiator);
+    const chatRoom = await ChatRoom.initiateChat(psychologistId, userId);
 
     return h.response({ success: true, chatRoom }).code(200);
   } catch (err) {

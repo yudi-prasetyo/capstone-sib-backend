@@ -4,6 +4,8 @@ const Psychologist = require('../models/PsychologistModel');
 const Appointment = require('../models/AppointmentModel');
 
 const registerPsychologist = async (req, h) => {
+  console.log('hai');
+  console.log(req.payload);
   const {
     firstName,
     lastName,

@@ -8,10 +8,10 @@ const MESSAGE_TYPES = {
 
 const chatMessageModel = new Schema(
   {
-    chatRoomId: { type: String, required: true },
+    chatRoomId: { type: Schema.Types.ObjectId, ref: 'ChatRoom', required: true },
     message: { type: String, required: true },
     type: { type: String, default: () => MESSAGE_TYPES.TEXT, required: true },
-    postedByUser: { type: String, required: true },
+    postedByUser: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   },
   {
     timestamps: true,
