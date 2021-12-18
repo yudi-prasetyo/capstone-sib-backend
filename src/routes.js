@@ -1,8 +1,14 @@
-const { registerUser, getUserById, getUserAppointments } = require('./handlers/userHandler');
 const {
-  registerPsychologist, getAllPsychologists, getPsychologistById, getPsychologistAppointments,
+  registerUser, getUserById, getUserAppointments, updateUserById,
+} = require('./handlers/userHandler');
+const {
+  registerPsychologist,
+  getAllPsychologists,
+  getPsychologistById,
+  getPsychologistAppointments,
+  updatePsychologistById,
 } = require('./handlers/psychologistHandler');
-const { createAppointment } = require('./handlers/appointmentHandler');
+const { createAppointment, getAppointmentById, updateAppointmentById } = require('./handlers/appointmentHandler');
 const { login } = require('./handlers/loginHandler');
 const { initiateChat, postMessage, getConversationById } = require('./handlers/chatHandler');
 const {
@@ -55,6 +61,22 @@ const routes = [
     },
   },
   {
+    method: 'PUT',
+    path: '/users/{userId}',
+    handler: async (req, h) => {
+      const res = await updateUserById(req, h);
+      return res;
+    },
+    options: {
+      validate: {
+        payload: userValidator,
+      },
+      auth: {
+        strategies: ['jwt-userId'],
+      },
+    },
+  },
+  {
     method: 'GET',
     path: '/users/{userId}/appointments',
     handler: async (req, h) => {
@@ -98,6 +120,22 @@ const routes = [
     },
   },
   {
+    method: 'PUT',
+    path: '/psychologists/{psychologistId}',
+    handler: async (req, h) => {
+      const res = await updatePsychologistById(req, h);
+      return res;
+    },
+    options: {
+      validate: {
+        payload: psychologistValidator,
+      },
+      auth: {
+        strategies: ['jwt-psychologistId'],
+      },
+    },
+  },
+  {
     method: 'GET',
     path: '/psychologists/{psychologistId}/appointments',
     handler: async (req, h) => {
@@ -123,6 +161,32 @@ const routes = [
       },
       auth: {
         strategies: ['jwt-user'],
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/appointments/{appointmentId}',
+    handler: async (req, h) => {
+      const res = await getAppointmentById(req, h);
+      return res;
+    },
+    options: {
+      auth: {
+        strategies: ['jwt-user', 'jwt-psychologist'],
+      },
+    },
+  },
+  {
+    method: 'PUT',
+    path: '/appointments/{appointmentId}',
+    handler: async (req, h) => {
+      const res = await updateAppointmentById(req, h);
+      return res;
+    },
+    options: {
+      auth: {
+        strategies: ['jwt-user', 'jwt-psychologist'],
       },
     },
   },

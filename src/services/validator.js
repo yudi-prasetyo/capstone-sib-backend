@@ -1,11 +1,17 @@
 const Joi = require('joi');
 
+const GENDER = {
+  FEMALE: 'Perempuan',
+  MALE: 'Laki-laki',
+};
+
 const userValidator = Joi.object({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(6).required(),
   dateOfBirth: Joi.date().required(),
+  gender: Joi.string().valid(...Object.values(GENDER)).required(),
 });
 
 const psychologistValidator = Joi.object({
@@ -15,6 +21,7 @@ const psychologistValidator = Joi.object({
   password: Joi.string().min(6).required(),
   dateOfBirth: Joi.date().required(),
   specialities: Joi.array().items(Joi.string()).required(),
+  gender: Joi.string().valid(...Object.values(GENDER)).required(),
 });
 
 const appointmentValidator = Joi.object({

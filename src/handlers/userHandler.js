@@ -9,6 +9,7 @@ const registerUser = async (req, h) => {
     lastName,
     email,
     dateOfBirth,
+    gender,
   } = req.payload;
 
   const password = await hashPassword(req.payload.password);
@@ -20,6 +21,7 @@ const registerUser = async (req, h) => {
       email,
       password,
       dateOfBirth,
+      gender,
     }).save();
 
     const token = createToken({
@@ -107,4 +109,43 @@ const getUserAppointments = async (req, h) => {
   }
 };
 
-module.exports = { getUserById, registerUser, getUserAppointments };
+const updateUserById = async (req, h) => {
+  const { userId } = req.params;
+  const {
+    firstName,
+    lastName,
+    email,
+    dateOfBirth,
+    gender,
+  } = req.payload;
+
+  try {
+    const user = await User.findByIdAndUpdate(
+      { _id: userId },
+      {
+        firstName,
+        lastName,
+        email,
+        dateOfBirth,
+        gender,
+      },
+    );
+
+    return h.response({
+      message: 'User updated successfully',
+      user,
+    });
+  } catch (err) {
+    const response = h.response({
+      status: 'fail',
+      message: err.message,
+    });
+    response.code(404);
+
+    return response;
+  }
+};
+
+module.exports = {
+  getUserById, registerUser, getUserAppointments, updateUserById,
+};

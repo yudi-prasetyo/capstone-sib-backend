@@ -2,13 +2,23 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const appointmentModel = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  psychologistId: { type: Schema.Types.ObjectId, ref: 'Psychologist' },
-  dateTime: { type: Date, required: true },
-  appointmentType: { type: String, required: true },
-  createDate: { type: Date, default: Date.now },
-});
+const appointmentModel = new Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    psychologistId: { type: Schema.Types.ObjectId, ref: 'Psychologist' },
+    dateTime: { type: Date, required: true },
+    appointmentType: { type: String, required: true },
+    createDate: { type: Date, default: Date.now },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+appointmentModel.statics
+  .getAppointmentById = async function getAppointmentById(appointmentId) {
+    return this.find({ _id: appointmentId }).populate('psychologistId').populate('userId');
+  };
 
 appointmentModel.statics
   .getUserAppointments = async function getUserAppointments(userId) {

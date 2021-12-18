@@ -4,14 +4,13 @@ const Psychologist = require('../models/PsychologistModel');
 const Appointment = require('../models/AppointmentModel');
 
 const registerPsychologist = async (req, h) => {
-  console.log('hai');
-  console.log(req.payload);
   const {
     firstName,
     lastName,
     email,
     dateOfBirth,
     specialities,
+    gender,
   } = req.payload;
 
   const password = await hashPassword(req.payload.password);
@@ -24,6 +23,7 @@ const registerPsychologist = async (req, h) => {
       password,
       dateOfBirth,
       specialities,
+      gender,
     }).save();
 
     const token = createToken({
@@ -118,6 +118,49 @@ const getPsychologistAppointments = async (req, h) => {
   }
 };
 
+const updatePsychologistById = async (req, h) => {
+  const { psychologistId } = req.params;
+  const {
+    firstName,
+    lastName,
+    email,
+    dateOfBirth,
+    specialities,
+    gender,
+  } = req.payload;
+
+  try {
+    const psychologist = await Psychologist.findByIdAndUpdate(
+      { _id: psychologistId },
+      {
+        firstName,
+        lastName,
+        email,
+        dateOfBirth,
+        specialities,
+        gender,
+      },
+    );
+
+    return h.response({
+      message: 'Psychologist updated successfully',
+      psychologist,
+    });
+  } catch (err) {
+    const response = h.response({
+      status: 'fail',
+      message: err.message,
+    });
+    response.code(404);
+
+    return response;
+  }
+};
+
 module.exports = {
-  registerPsychologist, getAllPsychologists, getPsychologistById, getPsychologistAppointments,
+  registerPsychologist,
+  getAllPsychologists,
+  getPsychologistById,
+  getPsychologistAppointments,
+  updatePsychologistById,
 };
