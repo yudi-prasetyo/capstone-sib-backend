@@ -1,5 +1,6 @@
 const Joi = require('joi');
 
+// Define the schema for the validation
 const GENDER = {
   FEMALE: 'Perempuan',
   MALE: 'Laki-laki',
