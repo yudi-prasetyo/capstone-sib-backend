@@ -10,6 +10,7 @@ const login = async (req, h) => {
     password,
   } = req.payload;
 
+
   try {
     const user = await User.findOne({ email }).exec();
     if (user) {
