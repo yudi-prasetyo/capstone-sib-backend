@@ -7,7 +7,7 @@ const appointmentModel = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     psychologistId: { type: Schema.Types.ObjectId, ref: 'Psychologist' },
     dateTime: { type: Date, required: true },
-    appointmentType: { type: String, required: true },
+    link: { type: String, required: true },
     createDate: { type: Date, default: Date.now },
   },
   {

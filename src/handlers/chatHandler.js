@@ -1,6 +1,5 @@
 const ChatRoom = require('../models/ChatRoomModel');
 const ChatMessage = require('../models/ChatMessageModel');
-const User = require('../models/UserModel');
 
 const initiateChat = async (req, h) => {
   try {
@@ -28,8 +27,10 @@ const postMessage = async (req, h) => {
     const { roomId } = req.params;
 
     const currentLoggedUser = req.auth.credentials.id;
+    const userRole = req.auth.credentials.role;
 
-    const post = await ChatMessage.createMessageInChatRoom(roomId, message, currentLoggedUser);
+    const post = await ChatMessage
+      .createMessageInChatRoom(roomId, message, currentLoggedUser, userRole);
     global.io.sockets.in(roomId).emit('new message', { message: post });
 
     return h.response({ success: true, post }).code(200);
@@ -59,11 +60,9 @@ const getConversationById = async (req, h) => {
       return response;
     }
 
-    const users = await User.getUserByIds(room.userIds);
-
     const conversation = await ChatMessage.getConversationByRoomId(roomId);
 
-    return h.response({ success: true, conversation, users }).code(200);
+    return h.response({ success: true, conversation }).code(200);
   } catch (err) {
     const response = h.response({
       status: 'fail',
@@ -75,4 +74,46 @@ const getConversationById = async (req, h) => {
   }
 };
 
-module.exports = { initiateChat, postMessage, getConversationById };
+const getChatRoomsByUserId = async (req, h) => {
+  try {
+    const { id } = req.auth.credentials;
+    const rooms = await ChatRoom.getChatRoomsByUserId(id);
+
+    return h.response({ success: true, rooms }).code(200);
+  } catch (err) {
+    const response = h.response({
+      status: 'fail',
+      message: err.message,
+    });
+    response.code(404);
+
+    return response;
+  }
+};
+
+const getChatRoomByUserAndPsychologistId = async (req, h) => {
+  try {
+    const { psychologistId } = req.params;
+    const { id } = req.auth.credentials;
+
+    const room = await ChatRoom.getChatRoomByUserAndPsychologistId(id, psychologistId);
+
+    return h.response({ success: true, room }).code(200);
+  } catch (err) {
+    const response = h.response({
+      status: 'fail',
+      message: err.message,
+    });
+    response.code(404);
+
+    return response;
+  }
+};
+
+module.exports = {
+  initiateChat,
+  postMessage,
+  getConversationById,
+  getChatRoomsByUserId,
+  getChatRoomByUserAndPsychologistId,
+};

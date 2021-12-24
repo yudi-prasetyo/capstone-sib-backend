@@ -27,6 +27,7 @@ const registerUser = async (req, h) => {
     const token = createToken({
       id: user._id,
       role: ROLES.USER,
+      firstName,
     });
 
     return h.response({

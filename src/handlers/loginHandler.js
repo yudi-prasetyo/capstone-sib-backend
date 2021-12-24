@@ -19,6 +19,7 @@ const login = async (req, h) => {
         const token = createToken({
           id: user._id,
           role: ROLES.USER,
+          firstName: user.firstName,
         });
 
         return h.response({
@@ -41,6 +42,7 @@ const login = async (req, h) => {
         const token = createToken({
           id: psychologist._id,
           role: ROLES.PSYCHOLOGIST,
+          firstName: psychologist.firstName,
         });
 
         return h.response({

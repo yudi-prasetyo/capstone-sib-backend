@@ -10,7 +10,13 @@ const {
 } = require('./handlers/psychologistHandler');
 const { createAppointment, getAppointmentById, updateAppointmentById } = require('./handlers/appointmentHandler');
 const { login } = require('./handlers/loginHandler');
-const { initiateChat, postMessage, getConversationById } = require('./handlers/chatHandler');
+const {
+  initiateChat,
+  postMessage,
+  getConversationById,
+  getChatRoomsByUserId,
+  getChatRoomByUserAndPsychologistId,
+} = require('./handlers/chatHandler');
 const {
   userValidator,
   psychologistValidator,
@@ -68,9 +74,6 @@ const routes = [
       return res;
     },
     options: {
-      validate: {
-        payload: userValidator,
-      },
       auth: {
         strategies: ['jwt-userId'],
       },
@@ -81,6 +84,32 @@ const routes = [
     path: '/users/{userId}/appointments',
     handler: async (req, h) => {
       const res = await getUserAppointments(req, h);
+      return res;
+    },
+    options: {
+      auth: {
+        strategies: ['jwt-userId'],
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/{userId}/chats',
+    handler: async (req, h) => {
+      const res = await getChatRoomsByUserId(req, h);
+      return res;
+    },
+    options: {
+      auth: {
+        strategies: ['jwt-userId'],
+      },
+    },
+  },
+  {
+    method: 'GET',
+    path: '/users/{userId}/chat/{psychologistId}',
+    handler: async (req, h) => {
+      const res = await getChatRoomByUserAndPsychologistId(req, h);
       return res;
     },
     options: {
@@ -173,7 +202,7 @@ const routes = [
     },
     options: {
       auth: {
-        strategies: ['jwt-user', 'jwt-psychologist'],
+        strategies: ['jwt-all'],
       },
     },
   },
@@ -218,7 +247,7 @@ const routes = [
         payload: chatMessageValidator,
       },
       auth: {
-        strategies: ['jwt-user', 'jwt-psychologist'],
+        strategies: ['jwt-all'],
       },
     },
   },

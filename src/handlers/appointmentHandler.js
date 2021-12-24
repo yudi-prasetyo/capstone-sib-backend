@@ -5,7 +5,7 @@ const createAppointment = async (req, h) => {
     userId,
     psychologistId,
     dateTime,
-    appointmentType,
+    link,
   } = req.payload;
 
   try {
@@ -13,7 +13,7 @@ const createAppointment = async (req, h) => {
       userId,
       psychologistId,
       dateTime,
-      appointmentType,
+      link,
     });
 
     await appointment.save();
@@ -69,7 +69,7 @@ const updateAppointmentById = async (req, h) => {
     userId,
     psychologistId,
     dateTime,
-    appointmentType,
+    link,
   } = req.payload;
 
   try {
@@ -79,7 +79,7 @@ const updateAppointmentById = async (req, h) => {
         userId,
         psychologistId,
         dateTime,
-        appointmentType,
+        link,
       },
     );
 

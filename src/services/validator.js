@@ -1,6 +1,5 @@
 const Joi = require('joi');
 
-// Define the schema for the validation
 const GENDER = {
   FEMALE: 'Perempuan',
   MALE: 'Laki-laki',
@@ -29,7 +28,7 @@ const appointmentValidator = Joi.object({
   userId: Joi.string().required(),
   psychologistId: Joi.string().required(),
   dateTime: Joi.date().required(),
-  appointmentType: Joi.string().required(),
+  link: Joi.string().required(),
 });
 
 const loginValidator = Joi.object({

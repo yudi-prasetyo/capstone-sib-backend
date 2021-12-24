@@ -39,4 +39,19 @@ chatRoomModel.statics
     return room;
   };
 
+chatRoomModel.statics
+  .getChatRoomsByUserId = async function getChatRoomsByUserId(userId) {
+    const rooms = await this.find({ userId }).populate('psychologistId').populate('userId');
+    return rooms;
+  };
+
+chatRoomModel.statics
+  .getChatRoomByUserAndPsychologistId = async function getChatRoomByUserAndPsychologistId(
+    userId,
+    psychologistId,
+  ) {
+    const room = await this.findOne({ userId, psychologistId });
+    return room;
+  };
+
 module.exports = mongoose.model('ChatRoom', chatRoomModel);

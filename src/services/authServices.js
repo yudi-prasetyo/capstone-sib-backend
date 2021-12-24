@@ -33,6 +33,25 @@ const authStrategyTemplate = {
   },
 };
 
+const validateLoggedUser = {
+  ...authStrategyTemplate,
+  validate: (artifacts) => {
+    const { id, role } = artifacts.decoded.payload;
+
+    if (role === ROLES.USER || role === ROLES.PSYCHOLOGIST) {
+      return {
+        isValid: true,
+        credentials: { id, role },
+      };
+    }
+
+    return {
+      isValid: false,
+      credentials: null,
+    };
+  },
+};
+
 const validateUser = {
   ...authStrategyTemplate,
   validate: (artifacts) => {
@@ -76,6 +95,7 @@ const validatePsychologist = {
   ...authStrategyTemplate,
   validate: (artifacts) => {
     const { id, role } = artifacts.decoded.payload;
+    console.log(artifacts.decoded.payload);
 
     if (role === ROLES.PSYCHOLOGIST) {
       return {
@@ -118,4 +138,5 @@ module.exports = {
   validateByUserId,
   validatePsychologist,
   validateByPsychologistId,
+  validateLoggedUser,
 };
